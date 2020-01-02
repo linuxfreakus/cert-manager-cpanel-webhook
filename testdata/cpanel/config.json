@@ -1,0 +1,9 @@
+{
+  "url": "https://cpanel.serve-dns.com:2087",
+  "username": "root",
+  "accessKeySecretRef": {
+    "name": "cpanel",
+    "key": "accessKey"
+  },
+  "ignoreCertError": true
+}

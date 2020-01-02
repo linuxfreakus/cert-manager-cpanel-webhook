@@ -1,0 +1,9 @@
+{
+  "go.testFlags": [
+    "-v"
+  ],
+  "go.testTimeout": "2m",
+  "go.testEnvVars": {
+    "TEST_ZONE_NAME": "serve-dns.com."
+  }
+}
