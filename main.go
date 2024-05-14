@@ -1,19 +1,20 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
 
 	v1 "k8s.io/api/core/v1"
-	extapi "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
+	extapi "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 
+	"github.com/cert-manager/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
+	"github.com/cert-manager/cert-manager/pkg/acme/webhook/cmd"
 	"github.com/go-resty/resty/v2"
-	"github.com/jetstack/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
-	"github.com/jetstack/cert-manager/pkg/acme/webhook/cmd"
 )
 
 var GroupName = os.Getenv("GROUP_NAME")
@@ -35,7 +36,7 @@ func main() {
 
 // customDNSProviderSolver implements the provider-specific logic needed to
 // 'present' an ACME challenge TXT record for your own DNS provider.
-// To do so, it must implement the `github.com/jetstack/cert-manager/pkg/acme/webhook.Solver`
+// To do so, it must implement the `github.com/cert-manager/cert-manager/pkg/acme/webhook.Solver`
 // interface.
 type customDNSProviderSolver struct {
 	// If a Kubernetes 'clientset' is needed, you must:
@@ -94,7 +95,7 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 		return err
 	}
 
-	scrt, err := c.client.CoreV1().Secrets(ch.ResourceNamespace).Get(cfg.AccessKeySecretRef.Name, metav1.GetOptions{})
+	scrt, err := c.client.CoreV1().Secrets(ch.ResourceNamespace).Get(context.Background(), cfg.AccessKeySecretRef.Name, metav1.GetOptions{})
 	if err != nil {
 		return err
 	}
@@ -136,7 +137,7 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 		return err
 	}
 
-	scrt, err := c.client.CoreV1().Secrets(ch.ResourceNamespace).Get(cfg.AccessKeySecretRef.Name, metav1.GetOptions{})
+	scrt, err := c.client.CoreV1().Secrets(ch.ResourceNamespace).Get(context.Background(), cfg.AccessKeySecretRef.Name, metav1.GetOptions{})
 	if err != nil {
 		return err
 	}

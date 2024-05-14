@@ -11,7 +11,7 @@ metadata:
 # Grant the webhook permission to read the ConfigMap containing the Kubernetes
 # apiserver's requestheader-ca-certificate.
 # This ConfigMap is automatically created by the Kubernetes apiserver.
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ include "cpanel-webhook.fullname" . }}:webhook-authentication-reader
@@ -32,7 +32,7 @@ subjects:
     namespace: {{ .Release.Namespace }}
 ---
 # Grant the webhook permission to read secrets
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: {{ include "cpanel-webhook.fullname" . }}:secrets
@@ -46,7 +46,7 @@ rules:
     resources: ["secrets"]
     verbs: ["get"]
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: {{ include "cpanel-webhook.fullname" . }}:secrets
@@ -67,7 +67,7 @@ subjects:
 ---
 # apiserver gets the auth-delegator role to delegate auth decisions to
 # the core apiserver
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: {{ include "cpanel-webhook.fullname" . }}:auth-delegator
@@ -87,7 +87,7 @@ subjects:
     namespace: {{ .Release.Namespace }}
 ---
 # Grant cert-manager permission to validate using our apiserver
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: {{ include "cpanel-webhook.fullname" . }}:domain-solver
@@ -104,7 +104,7 @@ rules:
     verbs:
       - 'create'
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: {{ include "cpanel-webhook.fullname" . }}:domain-solver
